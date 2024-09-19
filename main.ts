@@ -55,6 +55,30 @@ namespace keyestudioJoystick {
     }
 
     /**
+     * Outputs the current direction to the LEDs.
+     */
+    //% block="direction to LEDs"
+    export function directionToLEDs(): void {
+        const direction = checkJoystickDirection();
+        switch (direction) {
+            case "Up":
+                basic.showArrow(ArrowNames.North);
+                break;
+            case "Down":
+                basic.showArrow(ArrowNames.South);
+                break;
+            case "Left":
+                basic.showArrow(ArrowNames.West);
+                break;
+            case "Right":
+                basic.showArrow(ArrowNames.East);
+                break;
+            default:
+                basic.showIcon(IconNames.No)
+        }
+    }
+
+    /**
      * Check if pins were defined.
      */
     //% block="check pins defined"
