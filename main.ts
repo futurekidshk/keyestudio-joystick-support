@@ -3,6 +3,9 @@
  */
 //% block="Joystick"
 namespace keyestudioJoystick {
+
+    // Configure thresholds here
+    // Also can be overwritten by using blocks.
     const THRESHOLD = {
         up: 625,
         down: 175,
@@ -23,11 +26,11 @@ namespace keyestudioJoystick {
      */
     //% blockId=readJoystickInput
     //% block="read at X: $X, Y: $Y, B: $B"
+    //% weight=100
+    //% X.defl=AnalogReadWritePin.P1
+    //% Y.defl=AnalogReadWritePin.P0
+    //% B.defl=DigitalPin.P2
     export function setInput(X: AnalogReadWritePin, Y: AnalogReadWritePin, B: DigitalPin): void {
-        // Block default values
-        X |= AnalogReadWritePin.P1;
-        Y |= AnalogReadWritePin.P0;
-        B |= DigitalPin.P2;
 
         // Saves the pins to get values from in the future.
         X_pin = X;
@@ -135,4 +138,51 @@ namespace keyestudioJoystick {
             b: pins.digitalReadPin(B_pin),
         }
     }
+
+    /**
+     * Allow the threshold for each of the 4 directions to be overwritten.
+     * @param direction The direction you want to modify
+     */
+    //% block = "override $direction to $amount"
+    //% direction.defl=DirectionChoice.Up
+    //% amount.min=0 amount.max=1023 amount.defl=511.5
+    //% advanced=true
+    export function overrideThreshold(direction: DirectionChoice, amount: number): void {
+        switch (direction) {
+            case DirectionChoice.Up:
+                THRESHOLD.up = amount;
+                break;
+            case DirectionChoice.Down:
+                THRESHOLD.down = amount;
+                break;
+            case DirectionChoice.Left:
+                THRESHOLD.left = amount;
+                break;
+            case DirectionChoice.Right:
+                THRESHOLD.right = amount;
+                break;
+        }
+    }
+
+    /**
+     * Allows you to check the threshold for each direction
+     * @param direction The direction you want to get the threshold for.
+     */
+    //% block = "get $direction threshold"
+    //% advanced=true
+    export function getThreshold(direction: DirectionChoice): number {
+        switch (direction) {
+            case DirectionChoice.Up: return THRESHOLD.up;
+            case DirectionChoice.Down: return THRESHOLD.down;
+            case DirectionChoice.Left: return THRESHOLD.left;
+            case DirectionChoice.Right: return THRESHOLD.right;
+        }
+    }
+}
+
+enum DirectionChoice {
+    Up,
+    Down,
+    Left,
+    Right,
 }
